@@ -1,7 +1,17 @@
 * {
   box-sizing: border-box;
+  outline: 1px dashed green;
 }
 
 .nav-item {
   font-size: 0.8em;
+}
+
+.nav-item:hover {
+  background: green;
+  cursor: pointer;
+}
+
+button {
+  font-size: 0.7em;
 }
