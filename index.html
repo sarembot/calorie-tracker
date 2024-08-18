@@ -17,6 +17,8 @@
       <nav class="navbar navbar-expand-sm navbar-light bg-success">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">
+            <!-- font awesome icon -->
+            <i class="fa-solid fa-heart-pulse"></i>
             <span class="text-light">Calorie Counter</span>
           </a>
           <button
@@ -42,7 +44,7 @@
                     >Set Daily Limit</a
                   >
                 </li>
-                <!-- Modal Structure -->
+                <!-- modal pop-up for daily limit button -->
                 <div
                   class="modal fade"
                   id="exampleModal"
@@ -65,7 +67,7 @@
                       </div>
                       <div class="modal-body">
                         <input
-                          type="text"
+                          type="number"
                           class="form-control"
                           id="daily-limit-input"
                           placeholder="Enter your daily limit"
@@ -162,10 +164,34 @@
                   Meals / Food Items
                 </h3>
               </div>
+
               <div class="col-4">
-                <button class="rounded bg-success text-light">
+                <button id="mealFormBtn" class="rounded bg-success text-light">
                   + Add Meal
                 </button>
+              </div>
+              <!-- Add meal -->
+
+              <div class="collapse show" id="collapse-meal">
+                <div class="card card-body bg-light">
+                  <form action="" id="meal-form">
+                    <div class="mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="meal-name"
+                        placeholder="Food Item"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <input placeholder="Number of Calories"
+                        type="number"
+                        class="form-control"
+                        id="meal-calories"
+                      /><button class="btn btn-primary text-white"></button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -182,11 +208,34 @@
                 </h4>
               </div>
               <div class="col-4">
-                <button class="rounded bg-danger text-light">
+                <button id="workoutFormBtn" class="rounded bg-danger text-light">
                   + Add Workout
                 </button>
               </div>
             </div>
+
+            <!-- Add Workout -->
+
+            <div class="collapse show" id="collapse-workout">
+              <div class="card card-body bg-light">
+                <form action="" id="workout-form">
+                  <div class="mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="workout-name"
+                      placeholder="Workout"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <input placeholder="Calories Burned"
+                      type="number"
+                      class="form-control"
+                      id="meal-calories"
+                    /><button class="btn btn-primary text-white"></button>
+                  </div>
+                </form>
+              </div>
           </div>
         </div>
       </div>
