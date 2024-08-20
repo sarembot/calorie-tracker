@@ -1,85 +1,114 @@
-const dailyLimit = document.getElementById('daily-limit');
-const resetBtn = document.getElementById('reset');
-const saveBtn = document.getElementById('saveButton');
-const dailyLimitInput = document.getElementById('daily-limit-input');
-const mealFormBtn = document.getElementById('mealFormBtn');
-const workoutFormBtn = document.getElementById('workoutFormBtn');
-
-console.log(dailyLimit.textContent);
-
-saveBtn.addEventListener('click', () => {
-  if (NaN) {
-    alert('Please Enter a Number.');
-    return;
-  }
-
-  dailyLimit.textContent = dailyLimitInput.value;
-  dailyLimitInput.value = '';
-});
-
-// Toggle Add Meal
-mealFormBtn.addEventListener('click', () => {
-  document.getElementById('collapse-meal').classList.toggle('show');
-});
-
-// Toggle Add Workout Form
-workoutFormBtn.addEventListener('click', () => {
-  document.getElementById('collapse-workout').classList.toggle('show');
-});
-
 // App init
 
 class App {
   constructor() {
-    const tracker = new calorieTracker(2000, 0, null, null);
+    new CalorieTracker(2000, 0, null, null);
   }
 
   _newItem() {}
   _removeItem() {}
   _filterItems() {}
   _reset() {}
-  _setLimit() {}
+  _setLimit() {
+    //   saveBtn.addEventListener('click', () => {
+    //     if (NaN) {
+    //       alert('Please Enter a Number.');
+    //       return;
+    //     }
+    //     dailyLimit.textContent = dailyLimitInput.value;
+    //     dailyLimitInput.value = '';
+    //   });
+  }
 }
 
 // Tracker init
 
-class calorieTracker {
-  constructor(calorieLimit, totalCalories, meals, workouts) {
-    this._calorieLimit = calorieLimit;
-    this._totalCalories = totalCalories;
-    this._meals = meals;
-    this._workouts = workouts;
+class CalorieTracker {
+  constructor() {
+    this._calorieLimit = 2000;
+    this._totalCalories = 0;
+    this._meals = [];
+    this._workouts = [];
   }
 
-  addMeal() {}
-  removeMeal() {}
-  addWorkout() {}
-  removeWorkout() {}
+  addMeal(meal) {
+    this._meals.push(meal);
+    this._totalCalories += meal.calories;
+
+    this._displayCaloriesConsumed(meal);
+  }
+
+  removeMeal(meal) {
+    this._meals.pop(meal);
+    this._totalCalories -= meal.calories;
+  }
+
+  addWorkout(workout) {
+    this._workouts.push(workout);
+    this._totalCalories -= workout.calories;
+
+    this._displayCaloriesBurned(workout);
+  }
+
+  removeWorkout(workout) {
+    this._workouts.pop(workout);
+  }
+
   resetDay() {}
-  addMeal() {}
-  _displayCaloriesTotal() {}
-  _displayCalorieLimit() {}
-  _displayCaloriesConsumed() {}
-  _displayCaloriesBurned() {}
+
+  _displayCaloriesTotal() {
+    const gainLoss = document.querySelector('#gainLoss');
+  }
+
+  _displayCalorieLimit() {
+    const dailyLimit = document.getElementById('dailyLimit');
+    dailyLimit.textContent = this._calorieLimit;
+  }
+  _displayCaloriesConsumed(meal) {
+    const consumed = document.getElementById('consumed');
+
+    const newNum = parseInt(consumed.textContent) + meal.calories;
+    consumed.textContent = newNum;
+  }
+  _displayCaloriesBurned(workout) {
+    const burned = document.getElementById('burned');
+
+    const newNum = parseInt(burned.textContent) + workout.calories;
+    burned.textContent = newNum;
+  }
   _displayCaloriesRemaining() {}
 }
 
 // meal
 
-class meal {
-  constructor(id, name, calories) {
-    _this.id = id;
-    _this.name = name;
-    _this.calories = calories;
+class Meal {
+  constructor(name, calories) {
+    this.id = Math.random().toString(16).slice(2);
+    this.name = name;
+    this.calories = calories;
   }
 }
 
 //workouts
 
-class workout {
-  constructor(id, name, calories) {
-    _this.id = id;
-    _this.name = name;
-    _this.calories = calories;
+class Workout {
+  constructor(name, calories) {
+    this.id = Math.random().toString(16).slice(2);
+    this.name = name;
+    this.calories = calories;
   }
 }
+
+// init application
+const tracker = new CalorieTracker();
+
+const breakfast = new Meal('breakfast', 1000);
+
+const run = new Workout('run', 500);
+
+tracker.addMeal(breakfast);
+tracker.addMeal(new Meal('lunch', 500));
+tracker.addMeal(new Meal('dinner', 600));
+tracker.addWorkout(run);
+
+console.log(tracker._totalCalories);
