@@ -26,21 +26,28 @@ class App {
 class CalorieTracker {
   constructor() {
     this._calorieLimit = 2000;
-    this._totalCalories = 0;
+    this._totalCalories = this._calorieLimit;
     this._meals = [];
     this._workouts = [];
   }
 
+  // Public Methods/API //
+
+  // Adding and removing meals/workouts
   addMeal(meal) {
     this._meals.push(meal);
     this._totalCalories += meal.calories;
 
     this._displayCaloriesConsumed(meal);
+    this._displayCaloriesRemaining();
+    this._displayCaloriesTotal();
   }
 
   removeMeal(meal) {
     this._meals.pop(meal);
     this._totalCalories -= meal.calories;
+
+    this._displayCaloriesTotal();
   }
 
   addWorkout(workout) {
@@ -48,35 +55,82 @@ class CalorieTracker {
     this._totalCalories -= workout.calories;
 
     this._displayCaloriesBurned(workout);
+    this._displayCaloriesTotal();
   }
 
   removeWorkout(workout) {
     this._workouts.pop(workout);
   }
 
-  resetDay() {}
+  // Private Methods //
 
+  // Display stuff in the DOM
   _displayCaloriesTotal() {
     const gainLoss = document.querySelector('#gainLoss');
+
+    const pos = () => {
+      let acc = 0;
+      this._workouts.forEach((workout) => {
+        acc += workout.calories;
+      });
+      return acc;
+    };
+
+    const neg = () => {
+      let acc = 0;
+      this._meals.forEach((meal) => {
+        acc += meal.calories;
+      });
+      return acc;
+    };
+    console.log(neg());
+
+    gainLoss.textContent = parseInt(neg() - pos());
   }
 
   _displayCalorieLimit() {
     const dailyLimit = document.getElementById('dailyLimit');
     dailyLimit.textContent = this._calorieLimit;
   }
+
   _displayCaloriesConsumed(meal) {
     const consumed = document.getElementById('consumed');
 
-    const newNum = parseInt(consumed.textContent) + meal.calories;
-    consumed.textContent = newNum;
+    consumed.textContent = parseInt(consumed.textContent) + meal.calories;
   }
+
   _displayCaloriesBurned(workout) {
     const burned = document.getElementById('burned');
 
-    const newNum = parseInt(burned.textContent) + workout.calories;
-    burned.textContent = newNum;
+    burned.textContent = parseInt(burned.textContent) + workout.calories;
   }
-  _displayCaloriesRemaining() {}
+
+  _displayCaloriesRemaining() {
+    const remaining = document.getElementById('remaining');
+    const div = document.querySelector('.remaining');
+
+    let acc = this._calorieLimit;
+
+    this._meals.forEach((meal) => {
+      acc -= meal.calories;
+    });
+
+    remaining.textContent = acc;
+
+    if (acc < 0) {
+      console.log(div);
+      div.classList.remove('bg-success');
+      div.style.backgroundColor = 'orange';
+    } else {
+      div.classList.add('bg-success');
+    }
+  }
+
+  _renderStats() {}
+
+  resetDay() {}
+  setLimits() {}
+  loadItems() {}
 }
 
 // meal
@@ -107,8 +161,8 @@ const breakfast = new Meal('breakfast', 1000);
 const run = new Workout('run', 500);
 
 tracker.addMeal(breakfast);
-tracker.addMeal(new Meal('lunch', 500));
+// tracker.addMeal(new Meal('lunch', 500));
 tracker.addMeal(new Meal('dinner', 600));
 tracker.addWorkout(run);
 
-console.log(tracker._totalCalories);
+// console.log(tracker._totalCalories);
