@@ -162,20 +162,20 @@
         <div class="row">
           <div class="col-12 col-sm-6">
             <input
-              class="w-100 m-1 rounded"
+              class="w-100 my-3 px-1 rounded"
               type="text"
               placeholder="Filter Meals..."
             />
-            <div class="p-1 row">
+            <div class="row">
               <div class="col-8">
-                <h3 class="fs-5 border-start border-success border-5 ps-2">
+                <h3 class="w-100 fs-5 border-start border-success border-5 ps-2">
                   Meals
                 </h3>
               </div>
 
-              <div class="col-4">
+              <div class="col-4 d-flex justify-content-end align-items-center">
                 <button id="mealFormBtn" class="rounded bg-success text-light">
-                  + Add Meal
+                  + Add
                 </button>
               </div>
               <!-- Add meal -->
@@ -183,20 +183,20 @@
               <div class="collapse show" id="collapse-meal">
                 <div class="card card-body bg-light">
                   <form action="" id="meal-form">
-                    <div class="mb-3">
+                    <div class="mb-2">
                       <input
                         type="text"
-                        class="form-control"
+                        class="py-0 px-1 form-control"
                         id="meal-name"
                         placeholder="Food Item"
                       />
                     </div>
-                    <div class="mb-3">
-                      <input placeholder="Number of Calories"
+                    <div class="mb-2">
+                      <input placeholder="Calories"
                         type="number"
-                        class="form-control"
+                        class="py-0 px-1 form-control"
                         id="meal-calories"
-                      /><button class="btn btn-primary text-white"></button>
+                      /><button class="btn btn-success text-light px-1 py-0 mt-2 border">Add Meal Item</button>
                     </div>
                   </form>
                 </div>
@@ -205,19 +205,19 @@
           </div>
           <div class="col-12 col-sm-6">
             <input
-              class="w-100 m-1 rounded"
+              class="w-100 my-3 rounded"
               type="text"
               placeholder="Filter Workouts..."
             />
-            <div class="p-1 row">
-              <div class="col-8">
-                <h4 class="fs-5 border-start border-danger border-5 ps-2">
+            <div class="row">
+              <div class="col-8 d-flex align-items-center justify-content-start">
+                <h4 class="w-100 fs-5 border-start border-primary border-5 ps-1">
                   Workouts
                 </h4>
               </div>
-              <div class="col-4">
-                <button id="workoutFormBtn" class="rounded bg-danger text-light">
-                  + Add Workout
+              <div class="col-4 d-flex justify-content-end align-items-center">
+                <button id="workoutFormBtn" class="rounded bg-primary text-light">
+                  + Add
                 </button>
               </div>
             </div>
@@ -227,20 +227,20 @@
             <div class="collapse show" id="collapse-workout">
               <div class="card card-body bg-light">
                 <form action="" id="workout-form">
-                  <div class="mb-3">
+                  <div class="mb-2">
                     <input
                       type="text"
-                      class="form-control"
+                      class="py-0 px-1 form-control"
                       id="workout-name"
                       placeholder="Workout"
                     />
                   </div>
-                  <div class="mb-3">
+                  <div class="mb-2">
                     <input placeholder="Calories Burned"
                       type="number"
-                      class="form-control"
+                      class="py-0 px-1 form-control"
                       id="meal-calories"
-                    /><button class="btn btn-primary text-white"></button>
+                    /><button class="btn btn-primary text-light py-0 px-1 mt-2 border">Add Workout</button>
                   </div>
                 </form>
               </div>

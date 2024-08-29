@@ -2,23 +2,24 @@
 
 class App {
   constructor() {
-    new CalorieTracker(2000, 0, null, null);
+    this._tracker = new CalorieTracker();
+
+    // toggle
+
+    document
+      .getElementById('meal-form')
+      .addEventListener('submit', this._newMeal);
+  }
+
+  _newMeal(e) {
+    e.preventDefault();
   }
 
   _newItem() {}
   _removeItem() {}
   _filterItems() {}
   _reset() {}
-  _setLimit() {
-    //   saveBtn.addEventListener('click', () => {
-    //     if (NaN) {
-    //       alert('Please Enter a Number.');
-    //       return;
-    //     }
-    //     dailyLimit.textContent = dailyLimitInput.value;
-    //     dailyLimitInput.value = '';
-    //   });
-  }
+  _setLimit() {}
 }
 
 // Tracker init
@@ -26,7 +27,7 @@ class App {
 class CalorieTracker {
   constructor() {
     this._calorieLimit = 2000;
-    this._totalCalories = this._calorieLimit;
+    this._totalCalories = 0;
     this._meals = [];
     this._workouts = [];
   }
@@ -79,7 +80,7 @@ class CalorieTracker {
     const pos = () => {
       let acc = 0;
       this._workouts.forEach((workout) => {
-        acc += workout.calories;
+        acc -= workout.calories;
       });
       return acc;
     };
@@ -92,7 +93,7 @@ class CalorieTracker {
       return acc;
     };
 
-    gainLoss.textContent = parseInt(neg() - pos());
+    gainLoss.textContent = parseInt(neg() + pos());
 
     if (parseInt(gainLoss.textContent) < 0) {
       div.classList.remove('bg-success');
@@ -120,6 +121,7 @@ class CalorieTracker {
   _displayCaloriesRemaining() {
     const remaining = document.getElementById('remaining');
     const div = document.querySelector('.remaining');
+    const progressBar = document.getElementById('calorie-progress');
 
     let mealAcc = this._calorieLimit;
     let workoutAcc = 0;
@@ -134,31 +136,32 @@ class CalorieTracker {
 
     remaining.textContent = mealAcc + workoutAcc;
 
-    // if (acc < 0) {
-    //   console.log(div);
-    //   div.classList.remove('bg-success');
-    //   div.style.backgroundColor = 'orange';
-    // } else {
-    //   div.classList.add('bg-success');
-    // }
+    if (parseInt(remaining.textContent) < 0) {
+      // change cals remaining div color
+      div.classList.remove('bg-light');
+      div.classList.add('bg-danger');
+
+      // change progress bar color
+      progressBar.classList.remove('bg-primary');
+      progressBar.classList.add('bg-danger');
+    } else {
+      div.classList.remove('bg-danger');
+      div.classList.add('bg-light');
+
+      progressBar.classList.remove('bg-danger');
+      progressBar.classList.add('bg-success');
+    }
   }
 
   _displayCaloriesProgress() {
     const progressBar = document.getElementById('calorie-progress');
-    const percentage = (this._calorieLimit / this._totalCalories) * 100;
+    const percentage = (this._totalCalories / this._calorieLimit) * 100;
+    console.log(percentage);
 
     const width = Math.min(percentage, 100);
+    console.log(width);
 
     progressBar.style.width = `${width}%`;
-
-    // Change color of progress bar
-    if (parseInt(document.querySelector('.remaining').textContent) > 0) {
-      progressBar.classList.add('bg-success');
-      progressBar.classList.remove('bg-danger');
-    } else {
-      progressBar.classList.remove('bg-success');
-      progressBar.classList.add('bg-danger');
-    }
   }
 
   _renderStats() {
@@ -198,8 +201,10 @@ const breakfast = new Meal('breakfast', 1000);
 const run = new Workout('run', 500);
 
 tracker.addMeal(breakfast);
-// tracker.addMeal(new Meal('lunch', 500));
+tracker.addMeal(new Meal('lunch', 500));
+tracker.addMeal(new Meal('lunch', 500));
 tracker.addMeal(new Meal('dinner', 600));
 tracker.addWorkout(run);
+tracker.addWorkout(new Workout('bike', 700));
 
 // console.log(tracker._totalCalories);
