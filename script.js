@@ -1,18 +1,54 @@
 // App init
-
 class App {
   constructor() {
     this._tracker = new CalorieTracker();
 
-    // toggle
-
+    // Event Listners ---
+    // New meal
     document
       .getElementById('meal-form')
-      .addEventListener('submit', this._newMeal);
+      .addEventListener('submit', this._newMeal.bind(this));
+
+    // New Workout
+    document
+      .getElementById('workout-form')
+      .addEventListener('submit', this._newWorkout.bind(this));
   }
 
   _newMeal(e) {
     e.preventDefault();
+
+    let name = document.getElementById('meal-name');
+    let calories = document.getElementById('meal-calories');
+
+    // validate inputs
+    if (name.value === '' || calories.value === '') {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const meal = new Meal(name.value, calories.value);
+    this._tracker.addMeal(meal);
+    name.value = '';
+    calories.value = '';
+  }
+
+  _newWorkout(e) {
+    e.preventDefault();
+
+    let name = document.getElementById('workout-name');
+    let calories = document.getElementById('workout-calories');
+
+    // validate inputs
+    if (name.value === '' || calories.value === '') {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const workout = new Workout(name.value, calories.value);
+    this._tracker.addWorkout(workout);
+    name.value = '';
+    calories.value = '';
   }
 
   _newItem() {}
@@ -40,9 +76,6 @@ class CalorieTracker {
     this._totalCalories += meal.calories;
 
     this._renderStats();
-    this._displayCaloriesConsumed(meal);
-    this._displayCaloriesRemaining();
-    this._displayCaloriesTotal();
   }
 
   removeMeal(meal) {
@@ -50,7 +83,6 @@ class CalorieTracker {
     this._totalCalories -= meal.calories;
 
     this._renderStats();
-    this._displayCaloriesTotal();
   }
 
   addWorkout(workout) {
@@ -58,10 +90,6 @@ class CalorieTracker {
     this._totalCalories -= workout.calories;
 
     this._renderStats();
-
-    this._displayCaloriesBurned(workout);
-    this._displayCaloriesTotal();
-    this._displayCaloriesRemaining();
   }
 
   removeWorkout(workout) {
@@ -77,23 +105,9 @@ class CalorieTracker {
     const gainLoss = document.querySelector('#gainLoss');
     const div = document.querySelector('#gainLossDiv');
 
-    const pos = () => {
-      let acc = 0;
-      this._workouts.forEach((workout) => {
-        acc -= workout.calories;
-      });
-      return acc;
-    };
-
-    const neg = () => {
-      let acc = 0;
-      this._meals.forEach((meal) => {
-        acc += meal.calories;
-      });
-      return acc;
-    };
-
-    gainLoss.textContent = parseInt(neg() + pos());
+    gainLoss.textContent = 0;
+    gainLoss.textContent =
+      this._displayCaloriesConsumed() - this._displayCaloriesBurned();
 
     if (parseInt(gainLoss.textContent) < 0) {
       div.classList.remove('bg-success');
@@ -106,16 +120,29 @@ class CalorieTracker {
     dailyLimit.textContent = this._calorieLimit;
   }
 
-  _displayCaloriesConsumed(meal) {
+  _displayCaloriesConsumed() {
     const consumed = document.getElementById('consumed');
 
-    consumed.textContent = parseInt(consumed.textContent) + meal.calories;
+    const calsConsumed = this._meals.reduce(
+      (total, meal) => total + parseInt(meal.calories),
+      0
+    );
+
+    consumed.textContent = calsConsumed;
+    return calsConsumed;
   }
 
-  _displayCaloriesBurned(workout) {
+  _displayCaloriesBurned() {
     const burned = document.getElementById('burned');
 
-    burned.textContent = parseInt(burned.textContent) + workout.calories;
+    const calsBurned = this._workouts.reduce(
+      (total, workout) => total + parseInt(workout.calories),
+      0
+    );
+
+    console.log(calsBurned);
+    burned.textContent = calsBurned;
+    return calsBurned;
   }
 
   _displayCaloriesRemaining() {
@@ -123,18 +150,9 @@ class CalorieTracker {
     const div = document.querySelector('.remaining');
     const progressBar = document.getElementById('calorie-progress');
 
-    let mealAcc = this._calorieLimit;
-    let workoutAcc = 0;
-
-    this._workouts.forEach((workout) => {
-      workoutAcc += workout.calories;
-    });
-
-    this._meals.forEach((meal) => {
-      mealAcc -= meal.calories;
-    });
-
-    remaining.textContent = mealAcc + workoutAcc;
+    remaining.textContent = parseInt(
+      this._calorieLimit - this._displayCaloriesConsumed()
+    );
 
     if (parseInt(remaining.textContent) < 0) {
       // change cals remaining div color
@@ -156,16 +174,19 @@ class CalorieTracker {
   _displayCaloriesProgress() {
     const progressBar = document.getElementById('calorie-progress');
     const percentage = (this._totalCalories / this._calorieLimit) * 100;
-    console.log(percentage);
 
     const width = Math.min(percentage, 100);
-    console.log(width);
 
     progressBar.style.width = `${width}%`;
   }
 
   _renderStats() {
     this._displayCaloriesProgress();
+    this._displayCaloriesTotal();
+    this._displayCalorieLimit();
+    this._displayCaloriesRemaining();
+    this._displayCaloriesConsumed();
+    this._displayCaloriesBurned();
   }
 
   resetDay() {}
@@ -194,17 +215,4 @@ class Workout {
 }
 
 // init application
-const tracker = new CalorieTracker();
-
-const breakfast = new Meal('breakfast', 1000);
-
-const run = new Workout('run', 500);
-
-tracker.addMeal(breakfast);
-tracker.addMeal(new Meal('lunch', 500));
-tracker.addMeal(new Meal('lunch', 500));
-tracker.addMeal(new Meal('dinner', 600));
-tracker.addWorkout(run);
-tracker.addWorkout(new Workout('bike', 700));
-
-// console.log(tracker._totalCalories);
+const init = new App();
