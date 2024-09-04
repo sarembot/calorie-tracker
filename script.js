@@ -27,7 +27,7 @@ class App {
       return;
     }
 
-    const meal = new Meal(name.value, calories.value);
+    const meal = new Meal(name.value, +calories.value);
     this._tracker.addMeal(meal);
     name.value = '';
     calories.value = '';
@@ -45,13 +45,12 @@ class App {
       return;
     }
 
-    const workout = new Workout(name.value, calories.value);
+    const workout = new Workout(name.value, +calories.value);
     this._tracker.addWorkout(workout);
     name.value = '';
     calories.value = '';
   }
 
-  _newItem() {}
   _removeItem() {}
   _filterItems() {}
   _reset() {}
@@ -74,7 +73,7 @@ class CalorieTracker {
   addMeal(meal) {
     this._meals.push(meal);
     this._totalCalories += meal.calories;
-
+    this._displayNewMeal(meal);
     this._renderStats();
   }
 
@@ -88,7 +87,7 @@ class CalorieTracker {
   addWorkout(workout) {
     this._workouts.push(workout);
     this._totalCalories -= workout.calories;
-
+    this._displayNewWorkout(workout);
     this._renderStats();
   }
 
@@ -178,6 +177,50 @@ class CalorieTracker {
     const width = Math.min(percentage, 100);
 
     progressBar.style.width = `${width}%`;
+  }
+
+  _displayNewMeal(meal) {
+    const meals = document.getElementById('meal-items');
+
+    const div = document.createElement('div');
+    div.classList.add('card', 'my-2');
+    div.setAttribute('data-id', meal.id);
+    div.innerHTML = `
+    <div class="card-body">
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <h4 class="mx-2">${meal.name}</h4>
+        <div class="fs-5 bg-success text-white text-center rounded-2 px-2 px-lg-5">
+          ${meal.calories}
+        </div>
+        <button class="delete btn btn-danger text-white btn-sm mx-2">
+          <i class="fa-solid fa-x"></i>
+        </button>
+      </div>
+    </div>
+    `;
+    meals.appendChild(div);
+  }
+
+  _displayNewWorkout(workout) {
+    const workouts = document.getElementById('workout-items');
+
+    const div = document.createElement('div');
+    div.classList.add('card', 'my-2');
+    div.setAttribute('data-id', workout.id);
+    div.innerHTML = `
+    <div class="card-body">
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <h4 class="mx-2 fs-5">${workout.name}</h4>
+        <div class="fs-5 bg-primary text-white text-center rounded-2 px-2 px-lg-5">
+          ${workout.calories}
+        </div>
+        <button class="delete btn btn-danger btn-sm mx-2">
+          <i class="fa-solid fa-x"></i>
+        </button>
+      </div>
+    </div>
+    `;
+    workouts.appendChild(div);
   }
 
   _renderStats() {
